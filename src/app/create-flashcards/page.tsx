@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input";
+import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 import { Button } from "@/components/ui/button";
 import { generateFlashcards } from '@/lib/openrouter';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -89,15 +89,19 @@ export default function CreateFlashcardsPage() {
         <div className="container mx-auto p-4 flex flex-col items-center">
           <h1 className="text-5xl font-extrabold text-indigo-100 mb-8 text-center">Create Flashcards</h1>
           <div className="w-full max-w-md mb-8">
-            <Input
-              placeholder="Enter a topic or subject to generate flashcards..."
-              value={topic}
+            <PlaceholdersAndVanishInput
+              placeholders={[
+                "Enter a topic or subject to generate flashcards...",
+                "Try 'World War II'...",
+                "Or 'Photosynthesis'...",
+                "Maybe 'JavaScript Basics'..."
+              ]}
               onChange={(e) => setTopic(e.target.value)}
-              className="mb-4 bg-white/20 text-indigo-100 placeholder-indigo-200"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleGenerateFlashcards();
+              }}
             />
-            <Button onClick={handleGenerateFlashcards} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white" disabled={isLoading}>
-              {isLoading ? 'Generating...' : 'Generate Flashcards'}
-            </Button>
             {error && <p className="text-red-300 mt-2 text-center">{error}</p>}
           </div>
           {isLoading && (
