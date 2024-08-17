@@ -31,9 +31,10 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2, ease: [0.4, 0.0, 0.2, 1] }}
-            className="text-2xl md:text-3xl text-indigo-50 mb-8 font-light"
+            className="text-2xl md:text-3xl text-indigo-50 mb-8 font-light flex flex-col md:flex-row items-center justify-center"
           >
-            Revolutionize your learning with <Highlight>AI-powered flashcards!</Highlight>
+            <span className="mb-2 md:mb-0 md:mr-2">Revolutionize your learning with</span>
+            <Highlight>AI-powered flashcards!</Highlight>
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
