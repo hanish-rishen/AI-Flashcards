@@ -1,15 +1,43 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { cn } from "../lib/utils";
 import { IconBrandGoogle, IconRocket } from "@tabler/icons-react";
 import { motion } from "framer-motion";
+import { auth } from "../lib/firebase";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useRouter } from 'next/navigation';
 
 export function SignupFormDemo() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    setError('');
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      console.log("User signed up successfully");
+      router.push('/dashboard'); // Redirect to dashboard after successful signup
+    } catch (error) {
+      setError('Failed to create an account. Please try again.');
+      console.error(error);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      console.log("User signed in with Google successfully");
+      router.push('/dashboard');
+    } catch (error) {
+      setError('Failed to sign in with Google. Please try again.');
+      console.error(error);
+    }
   };
 
   return (
@@ -39,12 +67,13 @@ export function SignupFormDemo() {
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email" className="text-white">Email Address</Label>
-          <AnimatedInput id="email" placeholder="johndoe@example.com" type="email" />
+          <AnimatedInput id="email" placeholder="johndoe@example.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password" className="text-white">Password</Label>
-          <AnimatedInput id="password" placeholder="••••••••" type="password" />
+          <AnimatedInput id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </LabelInputContainer>
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -64,6 +93,7 @@ export function SignupFormDemo() {
             whileTap={{ scale: 0.95 }}
             className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-white rounded-md h-10 font-medium border border-white"
             type="button"
+            onClick={handleGoogleSignIn}
           >
             <IconBrandGoogle className="h-4 w-4 text-white" />
             <span className="text-white text-sm">
