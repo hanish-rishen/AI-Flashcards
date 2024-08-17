@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 import { Button } from "@/components/ui/button";
 import { generateFlashcards } from '@/lib/openrouter';
@@ -9,6 +9,7 @@ import { WavyBackground } from "@/components/ui/wavy-background";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface Flashcard {
   question: string;
@@ -24,11 +25,25 @@ export default function CreateFlashcardsPage() {
   const [user, setUser] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
+  const [profilePicture, setProfilePicture] = useState('/placeholder-avatar.png');
+  const [imageError, setImageError] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
+        if (user.photoURL) {
+          setProfilePicture(user.photoURL);
+          setImageError(false);
+        } else {
+          setProfilePicture('/placeholder-avatar.png');
+        }
       } else {
         router.push('/signup');
       }
@@ -36,6 +51,19 @@ export default function CreateFlashcardsPage() {
 
     return () => unsubscribe();
   }, [router]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -120,29 +148,60 @@ export default function CreateFlashcardsPage() {
     >
       {user && (
         <div className="absolute top-4 right-4 z-50">
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="flex items-center space-x-2 bg-white/30 text-indigo-100 px-4 py-2 rounded-md hover:bg-white/40 transition-colors duration-200 shadow-md"
             >
+              {!imageError ? (
+                <Image
+                  src={profilePicture}
+                  alt="Profile"
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                  onError={() => {
+                    setImageError(true);
+                    setProfilePicture('/placeholder-avatar.png');
+                  }}
+                />
+              ) : (
+                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                  <span className="text-gray-600 text-sm">{user.email?.charAt(0).toUpperCase()}</span>
+                </div>
+              )}
               <span>{user.email}</span>
-              <IconChevronDown size={20} />
+              <motion.div
+                animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <IconChevronDown size={20} />
+              </motion.div>
             </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                <button
-                  onClick={handleSignOut}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            <AnimatePresence>
+              {isDropdownOpen && (
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  variants={dropdownVariants}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
                 >
-                  Sign out
-                </button>
-              </div>
-            )}
+                  <button
+                    onClick={handleSignOut}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Sign out
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       )}
       <WavyBackground className="flex-grow flex items-center justify-center" colors={['#38bdf8', '#818cf8', '#c084fc', '#e879f9', '#22d3ee']}>
-        <div className="container mx-auto p-4 flex flex-col items-center">
+        <div className="container mx-auto p-4 flex flex-col items-center relative">
           <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-100 mb-8 text-center">Create Flashcards</h1>
           <div className="w-full max-w-md mb-8">
             <PlaceholdersAndVanishInput
