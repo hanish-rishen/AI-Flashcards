@@ -6,24 +6,30 @@ import { cn } from "../lib/utils";
 import { IconBrandGoogle, IconRocket } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { auth } from "../lib/firebase";
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useRouter } from 'next/navigation';
 
 export function SignupFormDemo() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSignUp, setIsSignUp] = useState(true);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log("User signed up successfully");
-      router.push('/create-flashcards'); // Redirect to create flashcards page after successful signup
+      if (isSignUp) {
+        await createUserWithEmailAndPassword(auth, email, password);
+        console.log("User signed up successfully");
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log("User signed in successfully");
+      }
+      router.push('/create-flashcards');
     } catch (error) {
-      setError('Failed to create an account. Please try again.');
+      setError(isSignUp ? 'Failed to create an account. Please try again.' : 'Failed to sign in. Please try again.');
       console.error(error);
     }
   };
@@ -33,7 +39,7 @@ export function SignupFormDemo() {
     try {
       await signInWithPopup(auth, provider);
       console.log("User signed in with Google successfully");
-      router.push('/create-flashcards'); // Redirect to create flashcards page after successful Google sign-in
+      router.push('/create-flashcards');
     } catch (error) {
       setError('Failed to sign in with Google. Please try again.');
       console.error(error);
@@ -45,76 +51,72 @@ export function SignupFormDemo() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black bg-opacity-80 border border-white backdrop-blur-sm"
+      className="w-full max-w-md mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black bg-opacity-80 border border-white backdrop-blur-sm"
     >
-      <h2 className="font-bold text-xl text-white">
-        Welcome to AI Flashcards
-      </h2>
-      <p className="text-neutral-300 text-sm max-w-sm mt-2">
-        Sign up to start your personalized learning journey
-      </p>
+      <motion.div
+        key={isSignUp ? 'signup' : 'signin'}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3 }}
+      >
+        <h2 className="font-bold text-xl text-white">
+          {isSignUp ? "Welcome to AI Flashcards" : "Welcome Back"}
+        </h2>
+        <p className="text-neutral-300 text-sm max-w-sm mt-2">
+          {isSignUp ? "Sign up to start your personalized learning journey" : "Sign in to continue your exciting learning journey now."}
+        </p>
 
-      <form className="my-8" onSubmit={handleSubmit}>
-        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-          <LabelInputContainer>
-            <Label htmlFor="firstname" className="text-white">First name</Label>
-            <AnimatedInput id="firstname" placeholder="John" type="text" />
+        <form className="my-8" onSubmit={handleSubmit}>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="email" className="text-white">Email Address</Label>
+            <AnimatedInput id="email" placeholder="johndoe@example.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastname" className="text-white">Last name</Label>
-            <AnimatedInput id="lastname" placeholder="Doe" type="text" />
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="password" className="text-white">Password</Label>
+            <AnimatedInput id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </LabelInputContainer>
-        </div>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email" className="text-white">Email Address</Label>
-          <AnimatedInput id="email" placeholder="johndoe@example.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="password" className="text-white">Password</Label>
-          <AnimatedInput id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </LabelInputContainer>
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-white text-black relative group/btn block w-full rounded-md h-10 font-medium"
-          type="submit"
-        >
-          Sign up &rarr;
-          <BottomGradient />
-        </motion.button>
-
-        <div className="bg-gradient-to-r from-transparent via-white to-transparent my-8 h-[1px] w-full" />
-
-        <div className="flex flex-col space-y-4">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-white rounded-md h-10 font-medium border border-white"
-            type="button"
-            onClick={handleGoogleSignIn}
+            className="bg-white text-black relative group/btn block w-full rounded-md h-10 font-medium"
+            type="submit"
           >
-            <IconBrandGoogle className="h-4 w-4 text-white" />
-            <span className="text-white text-sm">
-              Sign up with Google
-            </span>
+            {isSignUp ? "Sign up" : "Sign in"} &rarr;
             <BottomGradient />
           </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-white rounded-md h-10 font-medium border border-white"
-            type="button"
+
+          <div className="bg-gradient-to-r from-transparent via-white to-transparent my-8 h-[1px] w-full" />
+
+          <div className="flex flex-col space-y-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-white rounded-md h-10 font-medium border border-white"
+              type="button"
+              onClick={handleGoogleSignIn}
+            >
+              <IconBrandGoogle className="h-4 w-4 text-white" />
+              <span className="text-white text-sm">
+                Sign {isSignUp ? "up" : "in"} with Google
+              </span>
+              <BottomGradient />
+            </motion.button>
+          </div>
+        </form>
+
+        <p className="text-neutral-300 text-sm text-center">
+          {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+          <button
+            className="text-white underline"
+            onClick={() => setIsSignUp(!isSignUp)}
           >
-            <IconRocket className="h-4 w-4 text-white" />
-            <span className="text-white text-sm">
-              Try it out first
-            </span>
-            <BottomGradient />
-          </motion.button>
-        </div>
-      </form>
+            {isSignUp ? "Sign in" : "Sign up"}
+          </button>
+        </p>
+      </motion.div>
     </motion.div>
   );
 }
