@@ -50,6 +50,7 @@ export function SignupFormDemo() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       className="w-full max-w-md mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black bg-opacity-80 border border-white backdrop-blur-sm"
     >
@@ -60,10 +61,10 @@ export function SignupFormDemo() {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        <h2 className="font-bold text-xl text-white">
+        <h2 className="font-bold text-xl md:text-2xl text-white">
           {isSignUp ? "Welcome to AI Flashcards" : "Welcome Back"}
         </h2>
-        <p className="text-neutral-300 text-sm max-w-sm mt-2">
+        <p className="text-neutral-300 text-sm md:text-base max-w-sm mt-2">
           {isSignUp ? "Sign up to start your personalized learning journey" : "Sign in to continue your exciting learning journey now."}
         </p>
 
