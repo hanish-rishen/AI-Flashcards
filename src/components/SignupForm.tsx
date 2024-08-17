@@ -21,7 +21,7 @@ export function SignupFormDemo() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       console.log("User signed up successfully");
-      router.push('/dashboard'); // Redirect to dashboard after successful signup
+      router.push('/create-flashcards'); // Redirect to create flashcards page after successful signup
     } catch (error) {
       setError('Failed to create an account. Please try again.');
       console.error(error);
@@ -33,7 +33,7 @@ export function SignupFormDemo() {
     try {
       await signInWithPopup(auth, provider);
       console.log("User signed in with Google successfully");
-      router.push('/dashboard');
+      router.push('/create-flashcards'); // Redirect to create flashcards page after successful Google sign-in
     } catch (error) {
       setError('Failed to sign in with Google. Please try again.');
       console.error(error);
