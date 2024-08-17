@@ -52,7 +52,7 @@ export function SignupFormDemo() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full max-w-md mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black bg-opacity-80 border border-white backdrop-blur-sm"
+      className="w-full max-w-md mx-auto rounded-2xl p-4 md:p-8 shadow-input bg-black bg-opacity-40 border border-white/50 backdrop-blur-sm m-4 sm:m-6 md:m-8"
     >
       <motion.div
         key={isSignUp ? 'signup' : 'signin'}
@@ -61,54 +61,52 @@ export function SignupFormDemo() {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        <h2 className="font-bold text-xl md:text-2xl text-white">
+        <h2 className="font-bold text-xl md:text-2xl text-white text-center">
           {isSignUp ? "Welcome to AI Flashcards" : "Welcome Back"}
         </h2>
-        <p className="text-neutral-300 text-sm md:text-base max-w-sm mt-2">
+        <p className="text-neutral-300 text-sm md:text-base text-center mt-2">
           {isSignUp ? "Sign up to start your personalized learning journey" : "Sign in to continue your exciting learning journey now."}
         </p>
 
-        <form className="my-8" onSubmit={handleSubmit}>
-          <LabelInputContainer className="mb-4">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <LabelInputContainer>
             <Label htmlFor="email" className="text-white">Email Address</Label>
             <AnimatedInput id="email" placeholder="johndoe@example.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </LabelInputContainer>
-          <LabelInputContainer className="mb-4">
+          <LabelInputContainer>
             <Label htmlFor="password" className="text-white">Password</Label>
             <AnimatedInput id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </LabelInputContainer>
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white text-black relative group/btn block w-full rounded-md h-10 font-medium"
+            className="bg-white text-black relative group/btn w-full rounded-md h-10 font-medium"
             type="submit"
           >
             {isSignUp ? "Sign up" : "Sign in"} &rarr;
             <BottomGradient />
           </motion.button>
 
-          <div className="bg-gradient-to-r from-transparent via-white to-transparent my-8 h-[1px] w-full" />
+          <div className="bg-gradient-to-r from-transparent via-white to-transparent h-[1px] w-full" />
 
-          <div className="flex flex-col space-y-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-white rounded-md h-10 font-medium border border-white"
-              type="button"
-              onClick={handleGoogleSignIn}
-            >
-              <IconBrandGoogle className="h-4 w-4 text-white" />
-              <span className="text-white text-sm">
-                Sign {isSignUp ? "up" : "in"} with Google
-              </span>
-              <BottomGradient />
-            </motion.button>
-          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative group/btn flex items-center justify-center space-x-2 w-full text-white rounded-md h-10 font-medium border border-white"
+            type="button"
+            onClick={handleGoogleSignIn}
+          >
+            <IconBrandGoogle className="h-4 w-4 text-white" />
+            <span className="text-white text-sm">
+              Sign {isSignUp ? "up" : "in"} with Google
+            </span>
+            <BottomGradient />
+          </motion.button>
         </form>
 
-        <p className="text-neutral-300 text-sm text-center">
+        <p className="text-neutral-300 text-sm text-center mt-6">
           {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
           <button
             className="text-white underline"

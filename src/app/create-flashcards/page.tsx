@@ -118,19 +118,19 @@ export default function CreateFlashcardsPage() {
             onClick={toggleFlip}
           >
             <motion.div
-              className="absolute inset-0 w-full h-full bg-black/70 border-2 border-indigo-500 rounded-xl shadow-lg p-6 backface-hidden flex items-center justify-center"
+              className="absolute inset-0 w-full h-full bg-white/70 border-2 border-indigo-500 rounded-xl shadow-lg p-6 backface-hidden flex items-center justify-center"
               animate={{ rotateY: flipped ? 180 : 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h3 className="text-2xl font-bold text-center text-white">{flashcards[currentIndex]?.question}</h3>
+              <h3 className="text-2xl font-bold text-center text-gray-800">{flashcards[currentIndex]?.question}</h3>
             </motion.div>
             <motion.div
-              className="absolute inset-0 w-full h-full bg-black/70 border-2 border-indigo-500 rounded-xl shadow-lg p-6 backface-hidden flex items-center justify-center"
+              className="absolute inset-0 w-full h-full bg-white/70 border-2 border-indigo-500 rounded-xl shadow-lg p-6 backface-hidden flex items-center justify-center"
               initial={{ rotateY: 180 }}
               animate={{ rotateY: flipped ? 360 : 180 }}
               transition={{ duration: 0.5 }}
             >
-              <p className="text-xl text-center text-white">{flashcards[currentIndex]?.answer}</p>
+              <p className="text-xl text-center text-gray-800">{flashcards[currentIndex]?.answer}</p>
             </motion.div>
           </motion.div>
         </AnimatePresence>
@@ -151,7 +151,7 @@ export default function CreateFlashcardsPage() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center space-x-2 bg-white/30 text-indigo-100 px-4 py-2 rounded-md hover:bg-white/40 transition-colors duration-200 shadow-md"
+              className="flex items-center space-x-2 bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-full hover:bg-white/30 transition-colors duration-200 shadow-md"
             >
               {!imageError ? (
                 <Image
@@ -170,7 +170,7 @@ export default function CreateFlashcardsPage() {
                   <span className="text-gray-600 text-sm">{user.email?.charAt(0).toUpperCase()}</span>
                 </div>
               )}
-              <span>{user.email}</span>
+              <span className="truncate max-w-[150px]">{user.email}</span>
               <motion.div
                 animate={{ rotate: isDropdownOpen ? 180 : 0 }}
                 transition={{ duration: 0.2 }}
@@ -186,11 +186,11 @@ export default function CreateFlashcardsPage() {
                   exit="hidden"
                   variants={dropdownVariants}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
+                  className="absolute right-0 mt-2 w-48 bg-white/20 backdrop-blur-md rounded-md shadow-lg py-1 z-50"
                 >
                   <button
                     onClick={handleSignOut}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/30"
                   >
                     Sign out
                   </button>
@@ -217,7 +217,7 @@ export default function CreateFlashcardsPage() {
                 handleGenerateFlashcards();
               }}
             />
-            {error && <p className="text-red-300 mt-2 text-center">{error}</p>}
+            {error && <p className="text-red-600 mt-2 text-center">{error}</p>}
           </div>
           {isLoading && (
             <div className="w-full max-w-md">
@@ -230,13 +230,13 @@ export default function CreateFlashcardsPage() {
             <div className="w-full max-w-md">
               <FlashcardStack />
               <div className="flex justify-between items-center mt-6">
-                <Button onClick={handlePrevious} variant="outline" className="flex items-center bg-white/20 text-indigo-100 hover:bg-white/30">
+                <Button onClick={handlePrevious} variant="outline" className="flex items-center bg-white/20 backdrop-blur-md text-white hover:bg-white/30">
                   <IconChevronLeft className="mr-2" /> Previous
                 </Button>
-                <p className="text-indigo-100 text-xl font-semibold">
+                <p className="text-white text-xl font-semibold">
                   {currentIndex + 1}/{flashcards.length}
                 </p>
-                <Button onClick={handleNext} variant="outline" className="flex items-center bg-white/20 text-indigo-100 hover:bg-white/30">
+                <Button onClick={handleNext} variant="outline" className="flex items-center bg-white/20 backdrop-blur-md text-white hover:bg-white/30">
                   Next <IconChevronRight className="ml-2" />
                 </Button>
               </div>

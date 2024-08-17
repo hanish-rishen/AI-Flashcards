@@ -9,10 +9,10 @@ import Link from 'next/link';
 export default function Home() {
   const words = [
     {
-      text: "Enhance your study sessions with personalized, adaptive learning.",
+      text: "Adaptive learning for better studying.",
     },
     {
-      text: "Master any subject effortlessly with our cutting-edge AI technology.",
+      text: "Master content with AI flashcards.",
     },
   ];
 
