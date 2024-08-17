@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { WavyBackground } from "../components/ui/wavy-background";
 import { HeroHighlight, Highlight } from "../components/ui/hero-highlight";
 import { TypewriterEffectSmooth } from "../components/ui/typewriter-effect";
+import Link from 'next/link';
 
 export default function Home() {
   const words = [
@@ -49,29 +50,31 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6, ease: [0.4, 0.0, 0.2, 1] }}
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-8 py-4 rounded-full text-lg font-bold hover:from-purple-600 hover:to-indigo-600 transition-all duration-300"
-              style={{ position: 'relative', overflow: 'hidden' }}
-            >
-              Get Started
-              <motion.div
-                className="absolute top-0 left-0 w-full h-full"
-                style={{
-                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)',
-                  transform: 'skewX(-20deg)',
-                }}
-                animate={{
-                  x: ['-100%', '200%'],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 3,
-                  ease: 'linear',
-                }}
-              />
-            </motion.button>
+            <Link href="/signup">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-8 py-4 rounded-full text-lg font-bold hover:from-purple-600 hover:to-indigo-600 transition-all duration-300"
+                style={{ position: 'relative', overflow: 'hidden' }}
+              >
+                Get Started
+                <motion.div
+                  className="absolute top-0 left-0 w-full h-full"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)',
+                    transform: 'skewX(-20deg)',
+                  }}
+                  animate={{
+                    x: ['-100%', '200%'],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 3,
+                    ease: 'linear',
+                  }}
+                />
+              </motion.button>
+            </Link>
           </motion.div>
         </HeroHighlight>
       </WavyBackground>
