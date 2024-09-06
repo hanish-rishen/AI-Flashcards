@@ -1,6 +1,6 @@
 # AI Flashcards Project
 
-This project is an AI-powered flashcard application designed to automatically generate flashcards from text documents using advanced language models like LLaMA 3. The app provides a user-friendly interface for managing flashcards and employs spaced repetition to optimize learning.
+This project is an AI-powered flashcard application designed to automatically generate flashcards from text using advanced language models like LLaMA 3. The app provides a user-friendly interface for viewing interactive flashcards.
 
 ## Features
 
@@ -29,8 +29,8 @@ This project is an AI-powered flashcard application designed to automatically ge
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/your-username/ai-flashcards.git
-    cd ai-flashcards
+    git clone https://github.com/hanish-rishen/AI-Flashcards.git
+    cd AI-Flashcards
     ```
 
 2. **Install frontend dependencies:**
